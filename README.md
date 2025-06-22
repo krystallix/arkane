@@ -1,7 +1,7 @@
 ```md
 # 🧑‍💻 Arkane — Personal Portfolio Website
 
-This is my personal developer portfolio website, built with **React**, **Tailwind CSS**, and a custom dark mode toggle. It showcases my recent projects, skills, and contact info — all wrapped in a clean and responsive UI.
+This is my personal developer portfolio website, built with React, Tailwind CSS, and a custom dark mode toggle. It showcases my recent projects, skills, and contact info — all wrapped in a clean and responsive UI.
 
 
 ## 🛠️ Tech Stack
