@@ -25,7 +25,7 @@ export default function Navbar() {
     >
       {/* Logo */}
       <div className="h-8">
-        <h2 className="text-2xl font-bold">Arkane</h2>
+        <h2 className="text-2xl font-bold">Arkanes</h2>
       </div>
 
       {/* Menu */}
