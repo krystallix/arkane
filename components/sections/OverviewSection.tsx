@@ -189,15 +189,6 @@ export function OverviewSection({ stats, loading }: OverviewSectionProps) {
                                   key={wi}
                                   className="flex flex-col gap-[3px]"
                                 >
-                                  {/* Fill empty days if the week starts mid-week (only for the first week) */}
-                                  {wi === 0 && Array.from({
-                                    length: new Date(week[0].date).getDay(),
-                                  }).map((_, i) => (
-                                    <div
-                                      key={`empty-${i}`}
-                                      className="h-[9px] w-[9px] bg-transparent"
-                                    />
-                                  ))}
                                   {week.map((day) => (
                                     <Tooltip key={day.date} delayDuration={0}>
                                       <TooltipTrigger asChild>
