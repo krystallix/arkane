@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar"
 
+import { TooltipProvider } from "@/components/ui/tooltip"
+
 const inter = Inter({subsets:['latin'],variable:'--font-sans'})
 
 const fontMono = Geist_Mono({
@@ -31,7 +33,9 @@ export default function RootLayout({
       <body>
         <Navbar />
         <ThemeProvider>
-          <main className="container mx-auto">{children}</main>
+          <TooltipProvider>
+            <main className="container mx-auto">{children}</main>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

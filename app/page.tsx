@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Home,
   User,
@@ -10,6 +10,12 @@ import {
   NotebookText,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { HomeSection } from "@/components/sections/HomeSection"
+import { AboutSection } from "@/components/sections/AboutSection"
+import { ProjectsSection } from "@/components/sections/ProjectsSection"
+import { OverviewSection } from "@/components/sections/OverviewSection"
+import { BlogSection } from "@/components/sections/BlogSection"
+import { ContactSection } from "@/components/sections/ContactSection"
 
 const navItems = [
   { label: "Home", icon: Home, id: "home" },
@@ -23,122 +29,66 @@ const navItems = [
 export default function Page() {
   const [activeSection, setActiveSection] = useState("home")
 
-  useEffect(() => {
-    const rootElement = document.getElementById("scroll-area")
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
-        })
-      },
-      {
-        root: rootElement,
-        rootMargin: "-40% 0px -40% 0px",
-        threshold: 0,
-      }
-    )
-
-    navItems.forEach((item) => {
-      const element = document.getElementById(item.id)
-      if (element) observer.observe(element)
-    })
-
-    return () => observer.disconnect()
-  }, [])
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+  const SectionComponent: React.FC = () => {
+    switch (activeSection) {
+      case "home":
+        return <HomeSection />
+      case "about":
+        return <AboutSection />
+      case "projects":
+        return <ProjectsSection />
+      case "overview":
+        return <OverviewSection stats={githubStats} loading={loadingStats} />
+      case "blog":
+        return <BlogSection />
+      case "contact":
+        return <ContactSection />
+      default:
+        return <HomeSection />
     }
   }
 
+  const [githubStats, setGithubStats] = useState<{
+    langs: any[]
+    contributions: any[]
+    totalContribs: number
+  }>({
+    langs: [],
+    contributions: [],
+    totalContribs: 0,
+  })
+  const [loadingStats, setLoadingStats] = useState(true)
+
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const res = await fetch("/api/github/stats")
+        if (res.ok) {
+          const data = await res.json()
+          setGithubStats({
+            langs: data.languages || [],
+            contributions: data.contributions || [],
+            totalContribs: data.totalContributions || 0,
+          })
+        }
+      } catch (err) {
+        console.error("Failed to fetch github stats", err)
+      } finally {
+        setLoadingStats(false)
+      }
+    }
+    loadStats()
+  }, [])
+
   return (
-    <div className="relative grid h-screen grid-cols-[8fr_2fr] items-start gap-2 overflow-hidden">
-      {/* Left Scrollable Content */}
-      <div
-        id="scroll-area"
-        className="flex h-full snap-y snap-mandatory [scrollbar-width:none] flex-col overflow-y-scroll scroll-smooth [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {/* Home Section */}
-        <section
-          id="home"
-          className="flex min-h-screen shrink-0 snap-start snap-always flex-col px-8 pt-20"
-        >
-          <p className="text-[100px]">Hi, </p>
-          <p className="text-[100px] font-bold">I&apos;m Aji</p>
-          <div className="mt-10">
-            <p className="text-3xl leading-relaxed">
-              I&apos;m a Software Engineering from Yogyakarta, Indonesia.
-            </p>
-            <p className="text-3xl leading-relaxed">
-              I turn ideas into real products by handling everything myself,
-              from planning and development to infrastructure and launch.
-            </p>
-          </div>
-        </section>
-
-        {/* About Section */}
-        <section
-          id="about"
-          className="flex min-h-screen shrink-0 snap-start snap-always flex-col px-8 pt-20"
-        >
-          <h2 className="mb-10 text-5xl font-bold">About Me</h2>
-          <p className="text-2xl leading-relaxed text-zinc-600">
-            This is the about section. Here you can write more details about
-            your background, experience, and passions.
-          </p>
-        </section>
-
-        {/* Projects Section */}
-        <section
-          id="projects"
-          className="flex min-h-screen shrink-0 snap-start snap-always flex-col px-8 pt-20"
-        >
-          <h2 className="mb-10 text-5xl font-bold">Projects</h2>
-          <p className="text-2xl leading-relaxed text-zinc-600">
-            Showcase your best works here.
-          </p>
-        </section>
-
-        {/* Overview Section */}
-        <section
-          id="overview"
-          className="flex min-h-screen shrink-0 snap-start snap-always flex-col px-8 pt-20"
-        >
-          <h2 className="mb-10 text-5xl font-bold">Overview</h2>
-          <p className="text-2xl leading-relaxed text-zinc-600">
-            A high-level overview of your skills or timeline.
-          </p>
-        </section>
-
-        {/* Blog Section */}
-        <section
-          id="blog"
-          className="flex min-h-screen shrink-0 snap-start snap-always flex-col px-8 pt-20"
-        >
-          <h2 className="mb-10 text-5xl font-bold">Blog</h2>
-          <p className="text-2xl leading-relaxed text-zinc-600">
-            Your latest thoughts and articles.
-          </p>
-        </section>
-
-        {/* Contact Section */}
-        <section
-          id="contact"
-          className="flex min-h-screen shrink-0 snap-start snap-always flex-col px-8 pt-20"
-        >
-          <h2 className="mb-10 text-5xl font-bold">Contact</h2>
-          <p className="text-2xl leading-relaxed text-zinc-600">
-            Get in touch!
-          </p>
-        </section>
+    <div className="relative grid grid-cols-[8fr_2fr] items-start gap-10">
+      {/* Left Content */}
+      <div className="mt-10 flex flex-col">
+        <SectionComponent />
       </div>
 
       {/* Right Fixed Sidenav */}
-      <div className="flex h-full flex-col justify-center pe-4">
+      <div className="sticky top-14 flex h-fit flex-col pe-4 pt-4">
         <div className="flex flex-col">
           <span className="ps-4 pb-2 text-xl font-medium text-zinc-600">
             Menu
@@ -149,7 +99,7 @@ export default function Page() {
               <Button
                 key={label}
                 variant="ghost"
-                onClick={() => scrollToSection(id)}
+                onClick={() => setActiveSection(id)}
                 className={`group flex h-14 items-center justify-start rounded-none border-0 border-b border-zinc-100 text-left text-lg font-medium transition-colors hover:bg-transparent ${
                   isActive ? "text-primary" : "text-zinc-500 hover:text-black"
                 }`}
