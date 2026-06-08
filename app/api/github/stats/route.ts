@@ -13,6 +13,7 @@ const LEVEL_MAP: Record<string, 0 | 1 | 2 | 3 | 4> = {
 const QUERY = `
   query($login: String!) {
     user(login: $login) {
+      createdAt
       repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
         nodes {
           languages(first: 10, orderBy: { field: SIZE, direction: DESC }) {
@@ -27,6 +28,7 @@ const QUERY = `
         }
       }
       contributionsCollection(from: "2026-01-01T00:00:00Z", to: "2026-12-31T23:59:59Z") {
+        restrictedContributionsCount
         contributionCalendar {
           totalContributions
           weeks {
@@ -115,11 +117,61 @@ export async function GET() {
         }))
     )
 
+    // ── Compute Summary Stats ──────────────────────────────────────────────
+    let longestStreak = 0
+    let currentStreak = 0
+    let tempStreak = 0
+    let activeDays = 0
+    let mostProductiveDay = { date: "", count: 0 }
+
+    const todayStr = new Date().toISOString().split("T")[0]
+    let foundToday = false
+
+    for (const day of contributions) {
+      if (day.count > 0) {
+        activeDays++
+        tempStreak++
+        if (tempStreak > longestStreak) {
+          longestStreak = tempStreak
+        }
+        if (day.count > mostProductiveDay.count) {
+          mostProductiveDay = { date: day.date, count: day.count }
+        }
+      } else {
+        tempStreak = 0
+      }
+
+      if (day.date === todayStr) {
+        currentStreak = tempStreak
+        foundToday = true
+      }
+    }
+    
+    // If today is after 2026, current streak based on 2026 is just whatever it ended at,
+    // but typically we say 0 unless we fetch current year. We'll fallback to tempStreak if today not found and we want *a* streak, 
+    // but 0 is safer if today is not in the range.
+    if (!foundToday) {
+       currentStreak = 0 
+    }
+
+    const restricted = user.contributionsCollection.restrictedContributionsCount
+
+    const summary = {
+      createdAt: user.createdAt,
+      activeDays,
+      longestStreak,
+      currentStreak,
+      mostProductiveDay,
+      privateContributions: restricted,
+      publicContributions: calendar.totalContributions - restricted,
+    }
+
     return Response.json({
       languages,
       totalBytes,
       contributions,
       totalContributions: calendar.totalContributions,
+      summary,
     })
   } catch (err) {
     console.error("[github/stats] unexpected error:", err)

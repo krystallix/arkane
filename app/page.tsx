@@ -52,6 +52,7 @@ export default function Page() {
     langs: any[]
     contributions: any[]
     totalContribs: number
+    summary?: any
   }>({
     langs: [],
     contributions: [],
@@ -69,6 +70,7 @@ export default function Page() {
             langs: data.languages || [],
             contributions: data.contributions || [],
             totalContribs: data.totalContributions || 0,
+            summary: data.summary,
           })
         }
       } catch (err) {
