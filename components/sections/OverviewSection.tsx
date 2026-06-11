@@ -282,8 +282,15 @@ export function OverviewSection({ stats, loading }: OverviewSectionProps) {
                 <div className="flex flex-col gap-4">
                   <Card className="rounded-none border-zinc-200/80 bg-card/50 shadow-none dark:border-zinc-800">
                     <CardContent className="p-4">
-                      <div className="mb-1 text-xs text-muted-foreground">Joined Github since</div>
-                      <div className="mb-1 text-xl font-bold">{new Date(stats.summary.createdAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</div>
+                      <div className="mb-1 text-xs text-muted-foreground">
+                        Joined Github since
+                      </div>
+                      <div className="mb-1 text-xl font-bold">
+                        {new Date(stats.summary.createdAt).toLocaleDateString(
+                          "en-US",
+                          { day: "numeric", month: "short", year: "numeric" }
+                        )}
+                      </div>
                       <div className="flex items-center gap-1 text-xs text-emerald-500">
                         <ArrowUp size={14} />
                         {getDuration(stats.summary.createdAt)}
@@ -291,7 +298,7 @@ export function OverviewSection({ stats, loading }: OverviewSectionProps) {
                     </CardContent>
                   </Card>
 
-                  <Card className="rounded-none border-zinc-200/80 bg-card/50 shadow-none dark:border-zinc-800">
+                  {/* <Card className="rounded-none border-zinc-200/80 bg-card/50 shadow-none dark:border-zinc-800">
                     <CardContent className="p-4">
                       <div className="mb-1 text-xs text-muted-foreground">Total days on GitHub</div>
                       <div className="mb-1 text-xl font-bold">{getDaysDiff(stats.summary.createdAt)} days</div>
@@ -311,12 +318,16 @@ export function OverviewSection({ stats, loading }: OverviewSectionProps) {
                         Public: {stats.summary.publicContributions} | Private: {stats.summary.privateContributions}
                       </div>
                     </CardContent>
-                  </Card>
+                  </Card> */}
 
                   <Card className="rounded-none border-zinc-200/80 bg-card/50 shadow-none dark:border-zinc-800">
                     <CardContent className="p-4">
-                      <div className="mb-1 text-xs text-muted-foreground">Longest Streak</div>
-                      <div className="mb-1 text-xl font-bold">{stats.summary.longestStreak} days</div>
+                      <div className="mb-1 text-xs text-muted-foreground">
+                        Longest Streak
+                      </div>
+                      <div className="mb-1 text-xl font-bold">
+                        {stats.summary.longestStreak} days
+                      </div>
                       <div className="flex items-center gap-1 text-xs text-zinc-500">
                         <ArrowUp size={14} />
                         Current Streak: {stats.summary.currentStreak} days
@@ -326,9 +337,19 @@ export function OverviewSection({ stats, loading }: OverviewSectionProps) {
 
                   <Card className="rounded-none border-zinc-200/80 bg-card/50 shadow-none dark:border-zinc-800">
                     <CardContent className="p-4">
-                      <div className="mb-1 text-xs text-muted-foreground">Most Productive Day</div>
+                      <div className="mb-1 text-xs text-muted-foreground">
+                        Most Productive Day
+                      </div>
                       <div className="mb-1 text-xl font-bold">
-                        {stats.summary.mostProductiveDay.date ? new Date(stats.summary.mostProductiveDay.date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" }) : "-"}
+                        {stats.summary.mostProductiveDay.date
+                          ? new Date(
+                              stats.summary.mostProductiveDay.date
+                            ).toLocaleDateString("en-US", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "-"}
                       </div>
                       <div className="flex items-center gap-1 text-xs text-emerald-500">
                         <ArrowUp size={14} />
