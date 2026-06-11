@@ -1,14 +1,21 @@
-version: '3.8'
-
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: porfo-arkane
-    ports:
-      - "3002:3000"
-    environment:
-      - PORT=3000
-      - NODE_ENV=production
-    restart: always
+    restart: unless-stopped
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.productivity-porto-ic9ptm-web.rule=Host(`arkane.my.id`)
+      - traefik.http.routers.productivity-porto-ic9ptm-web.entrypoints=web
+      - traefik.http.services.productivity-porto-ic9ptm-web.loadbalancer.server.port=3000
+      - traefik.http.routers.productivity-porto-ic9ptm-web.service=productivity-porto-ic9ptm-web
+      - traefik.enable=true
+    networks:
+      dokploy-network: {}
+      default: {}
+
+networks:
+  dokploy-network:
+    external: true
