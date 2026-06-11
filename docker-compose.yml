@@ -6,15 +6,14 @@ services:
     container_name: porfo-arkane
     restart: unless-stopped
     labels:
+      - traefik.enable=true
       - traefik.docker.network=dokploy-network
       - traefik.http.routers.productivity-porto-ic9ptm-web.rule=Host(`arkane.my.id`)
       - traefik.http.routers.productivity-porto-ic9ptm-web.entrypoints=web
-      - traefik.http.services.productivity-porto-ic9ptm-web.loadbalancer.server.port=3000
       - traefik.http.routers.productivity-porto-ic9ptm-web.service=productivity-porto-ic9ptm-web
-      - traefik.enable=true
+      - traefik.http.services.productivity-porto-ic9ptm-web.loadbalancer.server.port=3000
     networks:
-      dokploy-network: {}
-      default: {}
+      - dokploy-network
 
 networks:
   dokploy-network:
