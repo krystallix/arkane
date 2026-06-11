@@ -103,11 +103,10 @@ export default function Page() {
   }, [])
 
   return (
-    <div className="relative grid grid-cols-1 md:grid-cols-[8fr_2fr] items-start gap-6 md:gap-10 px-4 md:px-0">
-
+    <div className="relative grid grid-cols-1 items-start gap-6 px-4 md:grid-cols-[8fr_2fr] md:gap-10 md:px-0">
       {/* ── Mobile Side Sheet ───────────────────────────────────── */}
       <div className="md:hidden">
-        {/* Backdrop */}
+        {/* Invisible tap-outside area to close — no blur, no dimming */}
         <AnimatePresence>
           {sheetOpen && (
             <motion.div
@@ -115,26 +114,30 @@ export default function Page() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.2 }}
               onClick={() => setSheetOpen(false)}
-              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+              className="fixed inset-0 z-40"
             />
           )}
         </AnimatePresence>
 
-        {/* Draggable Handle — always visible on right edge */}
+        {/* Draggable Handle — always visible on right edge, blurred */}
         <motion.button
           onClick={() => setSheetOpen((prev) => !prev)}
           onPanStart={() => setSheetOpen(true)}
           aria-label="Open navigation menu"
-          className={`fixed top-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-center gap-[5px] transition-all duration-300
-            ${sheetOpen ? "right-[260px]" : "right-0"}
-            w-6 h-16 rounded-l-xl bg-white/80 backdrop-blur-md border border-zinc-200 border-r-0 shadow-lg`}
+          animate={{ right: sheetOpen ? 260 : 0 }}
+          transition={{ type: "spring", stiffness: 280, damping: 28 }}
+          className="fixed top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-7 h-20 rounded-l-xl bg-zinc-900 backdrop-blur-xl border border-zinc-800 border-r-0 shadow-xl overflow-hidden"
           style={{ touchAction: "none" }}
-          whileTap={{ scale: 0.92 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <span className="w-1 h-4 rounded-full bg-zinc-400 block" />
-          <span className="w-1 h-4 rounded-full bg-zinc-400 block" />
+          <span
+            className="text-white text-[10px] font-bold tracking-[0.2em] uppercase"
+            style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+          >
+            MENU
+          </span>
         </motion.button>
 
         {/* Sheet Panel */}
@@ -154,32 +157,31 @@ export default function Page() {
               onDragEnd={(_, info) => {
                 if (info.offset.x > 80) setSheetOpen(false)
               }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-[260px] flex flex-col
-                bg-white/80 backdrop-blur-xl border-l border-zinc-200 shadow-2xl"
+              className="fixed top-0 right-0 bottom-0 z-50 flex w-[260px] flex-col border-l border-white/60 bg-white/70 shadow-2xl backdrop-blur-2xl"
               style={{ touchAction: "pan-y" }}
             >
               {/* Sheet Header */}
-              <div className="flex items-center justify-between px-5 pt-6 pb-4 border-b border-zinc-100">
-                <span className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">
+              <div className="flex items-center justify-between border-b border-zinc-100 px-5 pt-6 pb-4">
+                <span className="text-sm font-semibold tracking-widest text-zinc-400 uppercase">
                   Menu
                 </span>
                 {/* Drag indicator at top */}
-                <div className="w-8 h-1 rounded-full bg-zinc-300" />
+                {/* <div className="w-8 h-1 rounded-full bg-zinc-300" /> */}
               </div>
 
               {/* Nav Items */}
-              <nav className="flex flex-col px-3 pt-2 pb-6 gap-1 flex-1 overflow-y-auto">
+              <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 pt-2 pb-6">
                 {navItems.map(({ label, icon: Icon, id }) => {
                   const isActive = activeSection === id
                   return (
                     <button
                       key={id}
                       onClick={() => handleNavClick(id)}
-                      className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium transition-all text-left w-full
-                        ${isActive
+                      className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-base font-medium transition-all ${
+                        isActive
                           ? "bg-zinc-900 text-white shadow-sm"
                           : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-                        }`}
+                      }`}
                     >
                       <Icon size={18} className="shrink-0" />
                       {label}
@@ -189,8 +191,10 @@ export default function Page() {
               </nav>
 
               {/* Bottom hint */}
-              <div className="px-5 pb-8 pt-2 border-t border-zinc-100">
-                <p className="text-xs text-zinc-400 text-center">Swipe right to close</p>
+              <div className="border-t border-zinc-100 px-5 pt-2 pb-8">
+                <p className="text-center text-xs text-zinc-400">
+                  Swipe right to close
+                </p>
               </div>
             </motion.div>
           )}
@@ -198,12 +202,12 @@ export default function Page() {
       </div>
 
       {/* ── Left Content ─────────────────────────────────────────── */}
-      <div className="mt-4 md:mt-10 flex flex-col min-w-0">
+      <div className="mt-4 flex min-w-0 flex-col md:mt-10">
         <SectionComponent />
       </div>
 
       {/* ── Right Fixed Sidenav (Desktop Only) ───────────────────── */}
-      <div className="hidden md:sticky md:top-14 md:flex h-fit flex-col pe-4 pt-4">
+      <div className="hidden h-fit flex-col pe-4 pt-4 md:sticky md:top-14 md:flex">
         <div className="flex flex-col">
           <span className="ps-4 pb-2 text-xl font-medium text-zinc-600">
             Menu
