@@ -41,11 +41,11 @@ const techStack = [
 
 export function AboutSection() {
   return (
-    <section id="about" className="flex flex-col pb-20">
+    <section id="about" className="flex flex-col px-0 md:px-8 pb-20">
       <FadeInSection>
         {/* Hero Area */}
-        <div className="flex flex-col justify-between gap-8 pt-6 pb-20 md:flex-row">
-          <div className="relative aspect-square w-full max-w-[560px] shrink-0 contrast-125 grayscale">
+        <div className="flex flex-col justify-between gap-8 pt-6 pb-20 lg:flex-row items-center lg:items-start">
+          <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[500px] shrink-0 contrast-125 grayscale">
             <Image
               src="/profile.png"
               alt="Aji Nursafiki"
@@ -98,14 +98,14 @@ export function AboutSection() {
                   {techStack.map(({ category, items }) => (
                     <div
                       key={category}
-                      className="flex flex-wrap items-baseline gap-x-3 gap-y-2"
+                      className="flex flex-col sm:flex-row sm:items-baseline gap-y-1.5 sm:gap-y-0 gap-x-3"
                     >
-                      <span className="w-28 shrink-0 text-sm font-bold">
+                      <span className="w-full sm:w-28 shrink-0 text-sm font-bold text-zinc-800">
                         {category}
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {items.map((item) => (
-                          <Badge key={item} variant="secondary">
+                          <Badge key={item} variant="secondary" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-none">
                             {item}
                           </Badge>
                         ))}

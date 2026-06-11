@@ -62,7 +62,7 @@ export function ProjectsSection() {
   return (
     <section
       id="projects"
-      className="flex min-h-[calc(100vh-80px)] shrink-0 flex-col px-8 pb-10"
+      className="flex min-h-[calc(100vh-80px)] shrink-0 flex-col px-0 md:px-8 pb-10"
     >
       <FadeInSection>
         <h2 className="mb-10 text-5xl font-bold">Projects</h2>

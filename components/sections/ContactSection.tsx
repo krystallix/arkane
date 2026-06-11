@@ -53,7 +53,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="flex flex-col pb-32">
+    <section id="contact" className="flex flex-col px-0 md:px-8 pb-32">
       <FadeInSection>
         <div className="flex flex-col gap-12 pt-16">
           <div className="flex flex-col gap-2">

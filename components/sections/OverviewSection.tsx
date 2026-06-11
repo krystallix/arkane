@@ -115,7 +115,7 @@ export function OverviewSection({ stats, loading }: OverviewSectionProps) {
   })
 
   return (
-    <section id="overview" className="flex flex-col pb-20">
+    <section id="overview" className="flex flex-col px-0 md:px-8 pb-20">
       <FadeInSection>
         <div className="flex flex-col gap-6 pt-6">
           <div className="flex flex-col gap-4">
@@ -150,7 +150,7 @@ export function OverviewSection({ stats, loading }: OverviewSectionProps) {
               <span className="text-sm font-medium">Loading GitHub stats…</span>
             </div>
           ) : (
-            <div className="grid grid-cols-[7fr_3fr] gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-4">
               <div className="flex flex-col gap-4">
                 {/* ── Languages Card ── */}
                 <Card className="rounded-none border-zinc-200/80 bg-card/50 shadow-none dark:border-zinc-800">
